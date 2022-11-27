@@ -57,6 +57,7 @@ Components
 * For resource assignemnt and control Resource Quotas at namespaces is implemented, along with resource Limits and requests for the pods.            
 * Kubernetes Taint Tolerantas in combination with nodeAffinity is being used to schedule pods from tenant 2 on node2 only.                    
 
+![k8s](multi-tenancy.png)
 
 #### Kubernetes manifest files details
 - web.yaml =>  Wordpress deployment and service.
@@ -127,7 +128,7 @@ kubectl get all -n tenant2
 ```
 kubectl port-forward svc/wordpress 8088:80 -n tenant2
 ```
-![k8s](multi-tenancy.png)
+
 
 ## Scope of Improvements 
 
