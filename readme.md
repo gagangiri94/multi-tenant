@@ -133,6 +133,7 @@ kubectl port-forward svc/wordpress 8088:80 -n tenant2
 - Servicemesh with network policies can be used to improve the mesh and security. Istio has great compatibility with calico, which can make the solution more powerful as istio enables the communication between services and pods secure over mTLS using envoy proxy and improves the traffic behaviour, routing, retry logic and failover.
 - Ingress can used on top of service to improve the routing and services behaviour. Usefull in case of cloud solutions.
 - vCluster can be introduces, as it provides its own api within namespace and give more secure approach and granularity.
+- Helm should be used in production for deployment. It helps in keeping history and gives granularity to create the solution reusable by adding variables and values.
 - Monitoring and Observability using any platform like prometheus, grafana, datadog etc enhances the strength of system by helping admins to proactively improve the solution. 
 
 ```
