@@ -15,3 +15,12 @@ spec:
       ports:
         - protocol: TCP
           port: 3306
+
+  egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            tier: frontend 
+      ports:
+        - protocol: TCP
+          port: 3306

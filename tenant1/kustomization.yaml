@@ -3,3 +3,5 @@ resources:
   - db.yaml
   - web.yaml
   - quota.yaml
+  - network-deny-all.yaml
+  - allow-db.yaml

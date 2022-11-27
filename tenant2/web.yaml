@@ -47,6 +47,22 @@ spec:
         app: wordpress
         tier: frontend
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: size
+                operator: In
+                values:
+                - Large
+
+      tolerations:
+      - key: "size"
+        operator: "Equal"
+        effect: "NoSchedule"        
+        value: "Large"     
+
       containers:
       - image: wordpress:4.8-apache
         name: wordpress

@@ -5,6 +5,7 @@ metadata:
   namespace: tenant1
   labels:
     app: wordpress
+    type: db-service
 spec:
   ports:
     - port: 3306
