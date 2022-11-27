@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-db
+  namespace: tenant1
+spec:
+  podSelector:
+    matchLabels:
+      tier: mysql
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            tier: frontend
+      ports:
+        - protocol: TCP
+          port: 3306

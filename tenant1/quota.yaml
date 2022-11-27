@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mem-cpu-storage-quota
+  namespace: tenant1
+spec:
+  hard:
+    requests.cpu: "1.6"
+    requests.memory: 700Mi
+    limits.cpu: "2"
+    limits.memory: 1Gi
+    persistentvolumeclaims: "4"
+    requests.storage: "80Gi"

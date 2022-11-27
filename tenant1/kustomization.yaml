@@ -1,0 +1,5 @@
+resources:
+  - secret.yaml
+  - db.yaml
+  - web.yaml
+  - quota.yaml
