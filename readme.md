@@ -127,6 +127,7 @@ kubectl get all -n tenant2
 ```
 kubectl port-forward svc/wordpress 8088:80 -n tenant2
 ```
+![k8s](multit-tenancy.png)
 
 ## Scope of Improvements 
 
