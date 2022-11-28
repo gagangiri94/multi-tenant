@@ -58,6 +58,7 @@ Components
 * For resource assignemnt and control Resource Quotas at namespaces is implemented, along with resource Limits and requests for the pods.            
 * Kubernetes Taint Tolerantas in combination with nodeAffinity is being used to schedule pods from tenant 2 on node2 only.                    
 
+![k8s](multi-tenancy.png)
 
 #### Kubernetes manifest files details
 - web.yaml =>  Wordpress deployment and service.
@@ -155,23 +156,6 @@ kubectl get all -n tenant2
 kubectl port-forward svc/wordpress 8088:80 -n tenant2
 ```
 
-5b. ### Launch extracting service from tenant2-extract namespace.
-- Navigate to tenant1-extract directory.
-```
-cd ../tenant2-extract
-kubetl apply -f secret.yaml flask-deploy.yaml
-
-```
-
-- Test the extact api by forwarding port to local system or using minikube server url.
-```
-kubectl port-forward svc/flask-service 8090:5000 -n tenant2
-or
-minikube service flask-service --url -n tenant2-extract
-```
-Access svc:port/users from browser  or use curl 
-
-A list of all users from wordpress will show here. 
 
 
 ## Scope of Improvements 
