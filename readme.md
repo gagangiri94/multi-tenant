@@ -41,7 +41,7 @@ In Kubernetes, multi-tenancy refers to the sharing of a cluster and its control 
 Components
 - Minikube
 - Nodes- 2
-- Tenants- 2
+- Tenants- 2 (Every tenant has a supporting service in the extract namespace)
 - Network plugin- Calico 
 
 
@@ -52,8 +52,9 @@ Components
 ## Details about the solution and components used.
 
 * The Solution is creating a 2 nodes minikube cluster with calico as plugin for network policies. 
+* 1 single tenant is placed across 2 namespaces, for example- tenant1 and tenant1-extract make a complete 1 tenant.
 * Tenants are isolated by Kubernetes Namespaces.                                                                 
-* For network traffic isolation, network polcies are being used.                                              
+* For network traffic isolation, network polcies are being used. Only frontend pod within the namespace can connect database pod and flaskapi from extract namespace can access DB pod from tenent namespace.                                            
 * For resource assignemnt and control Resource Quotas at namespaces is implemented, along with resource Limits and requests for the pods.            
 * Kubernetes Taint Tolerantas in combination with nodeAffinity is being used to schedule pods from tenant 2 on node2 only.                    
 
@@ -61,10 +62,11 @@ Components
 #### Kubernetes manifest files details
 - web.yaml =>  Wordpress deployment and service.
 - db.yaml => Mysql deployment and service.
+- flask-deploy.yaml => its in extract namespace, which connects to Database and can be used to extact users information.
 - secret.yaml => Secret for mysql DB user password.
 - quota.yaml => Creating quotas for namespace.
 - network-deny-all.yaml => Network policy to deny all traffic by default.
-- allow-db.yaml => Allowing only webservers connection to database pod.
+- allow-db.yaml => Allowing only webservers connection to database pod and flaskspi from tenant<number>-extract namespace, So the extract service can extract the users ifo from database existing in tenant namespace.
 
 
 1. #### Start minikube with 2 nodes and Calico as plugin for Network Policies.
@@ -77,6 +79,9 @@ kubectl -n kube-system set env daemonset/calico-node FELIX_IGNORELOOSERPF=true
 - If kube-proxy pods doesn't start properly.(Troubleshooting)
 
 - `kubectl edit configmap kube-proxy --namespace=kube-system` and change the value of maxPerCore: to 0 under -conntrack.
+-  Label the namespaces, so we can use that labels in networkpolicies.
+- `kubectl label namespace tenant1-extract  identifier=tenant1-extract`
+- `kubectl label namespace tenant2-extract  identifier=tenant2-extract`
 
 
 
@@ -112,6 +117,28 @@ kubectl get all -n tenant1
 ```
 kubectl port-forward svc/wordpress 8088:80 -n tenant1
 ```
+Install wordpress from brower.
+
+4b. ### Launch extracting service from tenant1-extract namespace.
+- Navigate to tenant1-extract directory.
+```
+cd ../tenant1-extract
+kubetl apply -f secret.yaml flask-deploy.yaml
+
+```
+
+- Test the extact api by forwarding port to local system or using minikube server url.
+```
+kubectl port-forward svc/flask-service 8090:5000 -n tenant1
+or
+minikube service flask-service --url -n tenant1-extract
+```
+Access svc:port/users from browser  or use curl 
+
+A list of all users from wordpress will show here. 
+
+
+
 5. #### Launch tenant2
 - Navigate to tenant1 directory and deploy the manifests.
 ```
@@ -128,6 +155,25 @@ kubectl get all -n tenant2
 kubectl port-forward svc/wordpress 8088:80 -n tenant2
 ```
 
+5b. ### Launch extracting service from tenant2-extract namespace.
+- Navigate to tenant1-extract directory.
+```
+cd ../tenant2-extract
+kubetl apply -f secret.yaml flask-deploy.yaml
+
+```
+
+- Test the extact api by forwarding port to local system or using minikube server url.
+```
+kubectl port-forward svc/flask-service 8090:5000 -n tenant2
+or
+minikube service flask-service --url -n tenant2-extract
+```
+Access svc:port/users from browser  or use curl 
+
+A list of all users from wordpress will show here. 
+
+
 ## Scope of Improvements 
 
 - Servicemesh with network policies can be used to improve the mesh and security. Istio has great compatibility with calico, which can make the solution more powerful as istio enables the communication between services and pods secure over mTLS using envoy proxy and improves the traffic behaviour, routing, retry logic and failover.
@@ -137,3 +183,6 @@ kubectl port-forward svc/wordpress 8088:80 -n tenant2
 - Monitoring and Observability using any platform like prometheus, grafana, datadog etc enhances the strength of system by helping admins to proactively improve the solution. 
 
 ```
+
+
+
