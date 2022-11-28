@@ -6,7 +6,16 @@ items:
   kind: Namespace
   metadata:
       name: tenant1
+
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+      name: tenant1-extract      
 - apiVersion: v1
   kind: Namespace
   metadata:
       name: tenant2
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+      name: tenant2-extract      
